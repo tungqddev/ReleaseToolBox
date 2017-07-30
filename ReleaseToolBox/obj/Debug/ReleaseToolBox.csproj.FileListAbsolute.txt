@@ -18,3 +18,14 @@ C:\Users\tquach1.USOL-V\Documents\Visual Studio 2015\Projects\ReleaseToolBox\Rel
 C:\Users\tquach1.USOL-V\Documents\Visual Studio 2015\Projects\ReleaseToolBox\ReleaseToolBox\ReleaseToolBox\obj\Debug\ReleaseToolBox.csproj.GenerateResource.Cache
 C:\Users\tquach1.USOL-V\Documents\Visual Studio 2015\Projects\ReleaseToolBox\ReleaseToolBox\ReleaseToolBox\obj\Debug\ReleaseToolBox.frmTextEdit.resources
 C:\Users\tquach1.USOL-V\Documents\Visual Studio 2015\Projects\ReleaseToolBox\ReleaseToolBox\ReleaseToolBox\obj\Debug\ReleaseToolBox.frmDatabaseManagement.resources
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\bin\Debug\ReleaseToolBox.exe.config
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\bin\Debug\ReleaseToolBox.exe
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\bin\Debug\ReleaseToolBox.pdb
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.csprojResolveAssemblyReference.cache
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.frmDatabaseManagement.resources
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.frmTextEdit.resources
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.ReleaseTool.resources
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.Properties.Resources.resources
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.csproj.GenerateResource.Cache
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.exe
+C:\Users\TUNGQD\Documents\Visual Studio 2015\Projects\ReleaseToolBox\obj\Debug\ReleaseToolBox.pdb

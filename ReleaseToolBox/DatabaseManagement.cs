@@ -74,5 +74,30 @@ namespace ReleaseToolBox
         {
 
         }
+
+        private void queryExecute(string datanbaseName, string query)
+        {
+            string connetionString = null;
+            Global global = new Global();
+            SqlConnection cnn;
+            connetionString = "Data Source=" + global._severName + ";Initial Catalog=master;User ID=" + global._dbUser + ";Password=" + global._dbPassword;
+            cnn = new SqlConnection(connetionString);
+            SqlCommand cmdGetDataBaseList = new SqlCommand();
+            DataTable tblMyDatabaseList = new DataTable();
+            try
+            {
+                cnn.Open();
+                cmdGetDataBaseList.CommandText = query;
+                cmdGetDataBaseList.CommandType = CommandType.Text;
+                cmdGetDataBaseList.Connection = cnn;
+                cmdGetDataBaseList.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return;
+            }
+            cnn.Close();
+        }
     }
 }
