@@ -3,6 +3,8 @@ using System.Data;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Net.Mail;
 
 namespace ReleaseToolBox
 {
@@ -11,16 +13,17 @@ namespace ReleaseToolBox
         public frmDatabaseManagement()
         {
             InitializeComponent();
-            connectDatabase("","","");
+            connectDatabase("", "", "");
             txtDomainUser.Text = Environment.UserName;
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             DialogResult dialogResult = MessageBox.Show("Do you want to close!", "Exit confirmation", MessageBoxButtons.YesNo);
-            if(dialogResult == DialogResult.Yes)
+            if (dialogResult == DialogResult.Yes)
             {
                 this.Close();
+                mailSending("Quach.Dai.Tung@usol-v.com.vn", "Quach.Dai.Tung@usol-v.com.vn", "test mail");
             }
             else
             {
@@ -30,8 +33,14 @@ namespace ReleaseToolBox
 
         private void btnDBconfiguration_Click(object sender, EventArgs e)
         {
-            frmTextEdit dbConfiguartion = new frmTextEdit();
-            dbConfiguartion.Activate();
+            try
+            {
+                this.editDataInfo(@"master.data");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void connectDatabase(string dbName, string dbUser, string dbPassword)
@@ -69,13 +78,13 @@ namespace ReleaseToolBox
         {
             Global global = new Global();
             string dbinfo = System.IO.File.ReadAllText(@"master.data");
-            if(cbxDatabase.Text == string.Empty)
+            if (cbxDatabase.Text == string.Empty)
             {
                 MessageBox.Show("Please choose or type your database name !!!");
                 return;
             }
             Regex regexUserdb = new Regex("..+" + cbxDatabase.Text + "+.*");
-            Match matchUserinfo= regexUserdb.Match(dbinfo);
+            Match matchUserinfo = regexUserdb.Match(dbinfo);
             string userInfo = "";
 
             if (matchUserinfo.Success)
@@ -92,13 +101,13 @@ namespace ReleaseToolBox
 
             if (userInfoDomainUser.Trim() != txtDomainUser.Text.Trim())
             {
-                DialogResult dialogResult = MessageBox.Show("Warning!!!! It isn't "+ txtDomainUser.Text +" database. You still want to restore! ", "WARNING", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("Warning!!!! It isn't " + txtDomainUser.Text + " database. You still want to restore! ", "WARNING", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     try
                     {
-                        string dataPath = userInfo.Substring(userInfo.LastIndexOf(",") + 1, userInfo.Length - userInfo.LastIndexOf(",")-1);
-                        queryExecute(restoreQueryCreate(cbxDatabase.Text,global._dbPath, dataPath.Trim()));
+                        string dataPath = userInfo.Substring(userInfo.LastIndexOf(",") + 1, userInfo.Length - userInfo.LastIndexOf(",") - 1);
+                        queryExecute(restoreQueryCreate(cbxDatabase.Text, global._dbPath, dataPath.Trim()));
                     }
                     catch (Exception ex)
                     {
@@ -127,10 +136,10 @@ namespace ReleaseToolBox
                 }
                 MessageBox.Show("Restore database sucessfully!!!");
             }
-            
+
         }
 
-        private void queryExecute( string query)
+        private void queryExecute(string query)
         {
             string connetionString = null;
             Global global = new Global();
@@ -184,7 +193,7 @@ DECLARE @Table TABLE (LogicalName varchar(128),[PhysicalName] varchar(128), [Typ
                 set @bak_addr = '" + databaseLocation + @"'
                 set @data_addr = '" + desFolder + @"\'+@LogicalNameData+'.mdf'
                 set @log_addr = '" + desFolder + @"\'+@LogicalNameData+'.ldf'
-                RESTORE DATABASE " + databaseName +  @"
+                RESTORE DATABASE " + databaseName + @"
                 FROM DISK = @bak_addr
                 with file =1,
                 MOVE @LogicalNameData to  @data_addr,
@@ -194,5 +203,28 @@ DECLARE @Table TABLE (LogicalName varchar(128),[PhysicalName] varchar(128), [Typ
 
             return restoreQuery;
         }
+
+        private void editDataInfo(string filePath)
+        {
+            frmTextEdit editForm = new frmTextEdit();
+            editForm.Activate();
+            editForm.Show();
+            editForm.RichTextBoxValue = File.ReadAllText(filePath);
+            editForm.pathToSave = filePath.ToString();
+        }
+
+        private void mailSending(string fromEmail, string toEmail, string contents)
+        {
+            MailMessage mail = new MailMessage(fromEmail, toEmail);
+            SmtpClient client = new SmtpClient();
+            client.Port = 25;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new System.Net.NetworkCredential("tquach1", "QDT12345!");
+            client.Host = "10.128.2.51";
+            mail.Subject = "DATABASE RESTORE NOTIFICATION";
+            mail.Body = contents;
+            client.Send(mail);
+        }
+
     }
 }
