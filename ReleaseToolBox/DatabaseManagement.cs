@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Net.Mail;
+using System.Diagnostics;
 
 namespace ReleaseToolBox
 {
@@ -23,7 +24,7 @@ namespace ReleaseToolBox
             if (dialogResult == DialogResult.Yes)
             {
                 this.Close();
-                mailSending("Quach.Dai.Tung@usol-v.com.vn", "Quach.Dai.Tung@usol-v.com.vn", "test mail");
+                //mailSending("Quach.Dai.Tung@usol-v.com.vn", "Quach.Dai.Tung@usol-v.com.vn", "test mail");
             }
             else
             {
@@ -219,12 +220,31 @@ DECLARE @Table TABLE (LogicalName varchar(128),[PhysicalName] varchar(128), [Typ
             SmtpClient client = new SmtpClient();
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = new System.Net.NetworkCredential("tquach1", "QDT12345!");
+            client.Credentials = new System.Net.NetworkCredential("tquach1", "QDT1234");
             client.Host = "10.128.2.51";
             mail.Subject = "DATABASE RESTORE NOTIFICATION";
             mail.Body = contents;
             client.Send(mail);
         }
 
+        private void btnBackup_Click(object sender, EventArgs e)
+        {
+            Global global = new Global();
+            string backupQuery = @"BACKUP DATABASE " + cbxDatabase.Text +  " TO DISK = '"+ global._backupDBPath + "\\" + cbxDatabase.Text + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".Bak' ";
+            try
+            {
+                //MessageBox.Show(backupQuery);
+                queryExecute(backupQuery);
+                ProcessStartInfo startInfo = new ProcessStartInfo("explorer.exe");
+                startInfo.WindowStyle = ProcessWindowStyle.Maximized;
+                startInfo.Arguments = global._backupDBPath;
+                Process.Start(startInfo);
+                MessageBox.Show("Backup Succesfully !!!!");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
     }
 }

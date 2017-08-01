@@ -26,6 +26,7 @@ namespace ReleaseToolBox
             {
                 MessageBox.Show("Tags folder path doesn't exits. Please check [Configuration]");
             }
+            btnCompareGit.Visible = false;
         }
 
         private void menuTripConfiguration_Click(object sender, EventArgs e)
@@ -76,7 +77,7 @@ namespace ReleaseToolBox
             addFileArgument += "\"";
             addFileArgument += " --force";
 
-            commitArgument = " commit -m \"requested by ";
+            commitArgument = " commit -m \"update by ";
             commitArgument += requestUser + " \" ";
             commitArgument += "\"";
             commitArgument += commit_path;

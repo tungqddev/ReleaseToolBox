@@ -45,6 +45,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSVNupdate = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.chkSVNUsing = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +88,7 @@
             // 
             // txtFunctionID
             // 
-            this.txtFunctionID.Location = new System.Drawing.Point(222, 41);
+            this.txtFunctionID.Location = new System.Drawing.Point(439, 41);
             this.txtFunctionID.Name = "txtFunctionID";
             this.txtFunctionID.Size = new System.Drawing.Size(100, 20);
             this.txtFunctionID.TabIndex = 1;
@@ -163,18 +164,29 @@
             // btnSearch
             // 
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
-            this.btnSearch.Location = new System.Drawing.Point(345, 41);
+            this.btnSearch.Location = new System.Drawing.Point(562, 41);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(27, 23);
             this.btnSearch.TabIndex = 2;
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
+            // chkSVNUsing
+            // 
+            this.chkSVNUsing.AutoSize = true;
+            this.chkSVNUsing.Location = new System.Drawing.Point(222, 43);
+            this.chkSVNUsing.Name = "chkSVNUsing";
+            this.chkSVNUsing.Size = new System.Drawing.Size(120, 17);
+            this.chkSVNUsing.TabIndex = 8;
+            this.chkSVNUsing.Text = "Use SVN Command";
+            this.chkSVNUsing.UseVisualStyleBackColor = true;
+            // 
             // ReleaseTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(601, 362);
+            this.Controls.Add(this.chkSVNUsing);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.btnSVNupdate);
             this.Controls.Add(this.menuStrip1);
@@ -212,6 +224,7 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem databaseToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkSVNUsing;
     }
 }
 

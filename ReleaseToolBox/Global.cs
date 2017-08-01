@@ -62,6 +62,14 @@ namespace ReleaseToolBox
             set { dbPath = value; }
         }
 
+        private string backupDBPath;
+        public string _backupDBPath
+        {
+            get { return backupDBPath; }
+            set { backupDBPath = value; }
+        }
+
+
         protected void getPathConfiguration()
         {
             string configurationFileContent;
@@ -81,6 +89,7 @@ namespace ReleaseToolBox
             Regex regexDBUser = new Regex(@"(?m)(?<=\bDB User]:)[^\r\n]+");
             Regex regexDBPass = new Regex(@"(?m)(?<=\bDB Password]:)[^\r\n]+");
             Regex regexDefaultDBpath = new Regex(@"(?m)(?<=\bDefault DB Path]:)[^\r\n]+");
+            Regex regexbackupDBPath = new Regex(@"(?m)(?<=\bBackup Path]:)[^\r\n]+");
 
             Match matchBranchesPath = regexbranchesPath.Match(configurationFileContent);
             if (matchBranchesPath.Success)
@@ -123,6 +132,13 @@ namespace ReleaseToolBox
             {
                 dbPath = matchDefaultDBpath.Value.Replace(Environment.NewLine, "");
             }
+
+            Match matchbackupDBPath = regexbackupDBPath.Match(configurationFileContent);
+            if (matchDefaultDBpath.Success)
+            {
+                backupDBPath = matchbackupDBPath.Value.Replace(Environment.NewLine, "");
+            }
+
         }
     }
 
