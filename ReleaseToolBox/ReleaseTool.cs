@@ -15,6 +15,10 @@ namespace ReleaseToolBox
         public ReleaseTool()
         {
             InitializeComponent();
+            btnCompareGit.Enabled = false;
+            btnComparePre.Enabled = false;
+            btnSVNupdate.Enabled = false;
+            btnTagsCopy.Text = "Tags copy";
             Global global = new Global();
 
             if (!Directory.Exists(global._branchesPath))
@@ -26,7 +30,7 @@ namespace ReleaseToolBox
             {
                 MessageBox.Show("Tags folder path doesn't exits. Please check [Configuration]");
             }
-            btnCompareGit.Visible = false;
+
         }
 
         private void menuTripConfiguration_Click(object sender, EventArgs e)
@@ -44,7 +48,19 @@ namespace ReleaseToolBox
         private void btnSearch_Click(object sender, EventArgs e)
         {
             {
-                rchtxtMessage.Text = System.IO.File.ReadAllText(@".\FileList\" + txtFunctionID.Text + ".txt");
+                if(txtFunctionID.Text == string.Empty)
+                {
+                    MessageBox.Show("Please input your screen ID!!!");
+                    return;
+                }              
+                if (File.Exists(@".\FileList\" + txtFunctionID.Text + ".txt"))
+                {
+                    rchtxtMessage.Text = System.IO.File.ReadAllText(@".\FileList\" + txtFunctionID.Text + ".txt");
+                }
+                else
+                {
+                    MessageBox.Show("Can't find your function information. Please input by yourself!!!");
+                }
             }
         }
 
@@ -184,6 +200,11 @@ namespace ReleaseToolBox
             if (Directory.Exists(global._tagsPath + "\\" + txtFunctionID.Text))
             {
                 //List<String> tagIDFolderList = new List<String>;
+                if (chkSVNUsing.Checked)
+                {
+                    SVNUpdating(global._tagsPath + "\\" + txtFunctionID.Text);
+                }
+
                 listFileContent = System.IO.File.ReadAllText(@"FileList\" + txtFunctionID.Text + ".txt");
                 var sorted = Directory.GetDirectories(global._tagsPath + "\\" + txtFunctionID.Text).OrderBy(d => d).ToList();
                 lastestTagID = sorted[sorted.Count - 1].ToString().Substring(sorted[sorted.Count - 1].ToString().LastIndexOf("\\") + 1, 4);
@@ -192,10 +213,15 @@ namespace ReleaseToolBox
             }
             else
             {
+                if (chkSVNUsing.Checked)
+                {
+                    SVNUpdating(global._tagsPath);
+                }
                 DialogResult dialogResult = MessageBox.Show("Create folder " + txtFunctionID.Text, "Folder create", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     Directory.CreateDirectory(global._tagsPath + "\\" + txtFunctionID.Text + "\\0001");
+                    lastestTagID = "0000";
                 }
                 else if (dialogResult == DialogResult.No)
                 {
@@ -207,9 +233,9 @@ namespace ReleaseToolBox
 
             foreach (string singleFile in copyList)
             {
-                if (!Directory.Exists(global._tagsPath + "\\" + txtFunctionID.Text + "\\" + (((10000 + Convert.ToDecimal(lastestTagID) + 1)).ToString()).Substring(1, 4) + "\\" + singleFile.Substring(0, singleFile.LastIndexOf("\\")+1)))
+                if (!Directory.Exists(global._tagsPath + "\\" + txtFunctionID.Text.ToString() + "\\" + (((10000 + Convert.ToDecimal(lastestTagID) + 1)).ToString()).Substring(1, 4) + "\\" + singleFile.Substring(0, singleFile.LastIndexOf("\\"))))
                 {
-                    Directory.CreateDirectory(global._tagsPath + "\\" + txtFunctionID.Text + "\\" + (((10000 + Convert.ToDecimal(lastestTagID) + 1)).ToString()).Substring(1, 4) + "\\" + singleFile.Substring(0, singleFile.LastIndexOf("\\") + 1));
+                    Directory.CreateDirectory(global._tagsPath + "\\" + txtFunctionID.Text + "\\" + (((10000 + Convert.ToDecimal(lastestTagID) + 1)).ToString()).Substring(1, 4) + "\\" + singleFile.Substring(0, singleFile.LastIndexOf("\\")));
                 }
                 try
                 {
@@ -227,6 +253,11 @@ namespace ReleaseToolBox
                 }
             }
 
+            if (chkSVNUsing.Checked)
+            {
+                commit_svn(global._tagsPath + "\\" + txtFunctionID.Text);
+            }
+
         }
 
         private void btnSVNupdate_Click(object sender, EventArgs e)
@@ -234,12 +265,20 @@ namespace ReleaseToolBox
             Global global = new Global();
             try
             {
-                SVNUpdating(global._tagsPath);
+                if (chkSVNUsing.Checked)
+                {
+                    SVNUpdating(global._tagsPath);
+                }
+                else
+                {
+                    MessageBox.Show("Please check [SVN Using] if you want to use!");
+                }
             }
             catch (Exception ex)
             {
                 rchtxtMessage.Text = ex.ToString();
             }
+
         }
 
         private void editText(string filePath)
@@ -293,6 +332,22 @@ namespace ReleaseToolBox
             frmDatabaseManagement formDatabaseManagement = new frmDatabaseManagement();
             formDatabaseManagement.Show();
             formDatabaseManagement.Activate();
+        }
+
+        private void chkSVNUsing_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkSVNUsing.Checked)
+            {
+                btnSVNupdate.Enabled = true;
+                btnTagsCopy.Text = "Tags copy and Commit";
+            }
+            else
+            {
+                {
+                    btnSVNupdate.Enabled = false;
+                    btnTagsCopy.Text = "Tags copy";
+                }
+            }
         }
     }
 }

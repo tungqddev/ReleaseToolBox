@@ -180,6 +180,7 @@
             this.chkSVNUsing.TabIndex = 8;
             this.chkSVNUsing.Text = "Use SVN Command";
             this.chkSVNUsing.UseVisualStyleBackColor = true;
+            this.chkSVNUsing.CheckedChanged += new System.EventHandler(this.chkSVNUsing_CheckedChanged);
             // 
             // ReleaseTool
             // 

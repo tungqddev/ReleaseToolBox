@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Net.Mail;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ReleaseToolBox
 {
@@ -16,6 +18,7 @@ namespace ReleaseToolBox
             InitializeComponent();
             connectDatabase("", "", "");
             txtDomainUser.Text = Environment.UserName;
+          
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -73,6 +76,7 @@ namespace ReleaseToolBox
                 MessageBox.Show("Can not open connection ! " + Environment.NewLine + ex.ToString());
             }
             cnn.Close();
+            fillDataBakCbx();
         }
 
         private void btnRestoreDefault_Click(object sender, EventArgs e)
@@ -84,7 +88,7 @@ namespace ReleaseToolBox
                 MessageBox.Show("Please choose or type your database name !!!");
                 return;
             }
-            Regex regexUserdb = new Regex("..+" + cbxDatabase.Text + "+.*");
+            Regex regexUserdb = new Regex("..+" + cbxDatabase.Text.Substring(4,cbxDatabase.Text.Length-4) + "+.*");
             Match matchUserinfo = regexUserdb.Match(dbinfo);
             string userInfo = "";
 
@@ -108,7 +112,7 @@ namespace ReleaseToolBox
                     try
                     {
                         string dataPath = userInfo.Substring(userInfo.LastIndexOf(",") + 1, userInfo.Length - userInfo.LastIndexOf(",") - 1);
-                        queryExecute(restoreQueryCreate(cbxDatabase.Text, global._dbPath, dataPath.Trim()));
+                        queryExecute(restoreQueryCreate(cbxDatabase.Text, global._dbPath + "\\" + cbxBackupFile.SelectedItem, dataPath.Trim()));
                     }
                     catch (Exception ex)
                     {
@@ -128,7 +132,7 @@ namespace ReleaseToolBox
                 try
                 {
                     string dataPath = userInfo.Substring(userInfo.LastIndexOf(",") + 1, userInfo.Length - userInfo.LastIndexOf(",") - 1);
-                    queryExecute(restoreQueryCreate(cbxDatabase.Text, global._dbPath, dataPath.Trim()));
+                    queryExecute(restoreQueryCreate(cbxDatabase.Text, global._dbPath+"\\"+cbxBackupFile.SelectedItem, dataPath.Trim()));
                 }
                 catch (Exception ex)
                 {
@@ -172,7 +176,7 @@ DROP DATABASE " + cbxDatabase.Text + @" END
 
 DECLARE @Table TABLE (LogicalName varchar(128),[PhysicalName] varchar(128), [Type] varchar, [FileGroupName] varchar(128), [Size] varchar(128), 
             [MaxSize] varchar(128), [FileId]varchar(128), [CreateLSN]varchar(128), [DropLSN]varchar(128), [UniqueId]varchar(128), [ReadOnlyLSN]varchar(128), [ReadWriteLSN]varchar(128), 
-            [BackupSizeInBytes]varchar(128), [SourceBlockSize]varchar(128), [FileGroupId]varchar(128), [LogGroupGUID]varchar(128), [DifferentialBaseLSN]varchar(128), [DifferentialBaseGUID]varchar(128), [IsReadOnly]varchar(128), [IsPresent]varchar(128), [TDEThumbprint]varchar(128)
+            [BackupSizeInBytes]varchar(128), [SourceBlockSize]varchar(128), [FileGroupId]varchar(128), [LogGroupGUID]varchar(128), [DifferentialBaseLSN]varchar(128), [DifferentialBaseGUID]varchar(128), [IsReadOnly]varchar(128), [IsPresent]varchar(128), [TDEThumbprint]varchar(128),[SnapshotUrl]nvarchar(128)
                 )
                 DECLARE @Path varchar(1000)='" + databaseLocation + @"'
                 DECLARE @LogicalNameData varchar(128),@LogicalNameLog varchar(128)
@@ -244,6 +248,45 @@ DECLARE @Table TABLE (LogicalName varchar(128),[PhysicalName] varchar(128), [Typ
             catch(Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void cbxBackupFile_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           // Global global = new Global();
+           //foreach(string bakFile in (Directory.GetFiles(global._backupDBPath, "*.bak", SearchOption.AllDirectories)))
+           // {
+           //     cbxBackupFile.Items.Add(bakFile);
+           // }
+        }
+
+        private void fillDataBakCbx ()
+        {
+            Global global = new Global();
+            string[] files = new DirectoryInfo(global._backupDBPath).GetFiles().Select(o => o.Name).ToArray();
+            //var sorted = Directory.GetFiles(global._backupDBPath,".bak", SearchOption.AllDirectories).OrderBy(f => f);
+            //List<string> bakListFile = new List<string>();
+
+            
+            //for (int i=0;i<sorted.Count();i++)
+            //{
+            //    //bakListFile.Add();
+            //}
+
+            foreach (string bakFile in files)
+            {
+
+                cbxBackupFile.Items.Add(Path.GetFileName(bakFile));
+            }
+        }
+
+        private void cbxBackupFile_DropDown(object sender, EventArgs e)
+        {
+            Global global = new Global();
+            foreach (string bakFile in (Directory.GetFiles(global._backupDBPath, "*.bak", SearchOption.AllDirectories)))
+            {
+
+                cbxBackupFile.Items.Add(Path.GetFileName(bakFile));
             }
         }
     }
