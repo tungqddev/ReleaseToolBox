@@ -75,6 +75,7 @@ namespace ReleaseToolBox
             }
             else if (dialogResult == DialogResult.No)
             {
+            	
                 return;
             }
         }
