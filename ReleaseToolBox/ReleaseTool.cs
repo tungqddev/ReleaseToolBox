@@ -15,7 +15,6 @@ namespace ReleaseToolBox
         public ReleaseTool()
         {
             InitializeComponent();
-            
             btnCompareGit.Enabled = false;
             btnComparePre.Enabled = false;
             btnSVNupdate.Enabled = false;
